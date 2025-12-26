@@ -1,0 +1,23 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:common="using:IGRF.Avalonia.Common"
+             x:Class="IGRF.Avalonia.App"
+             RequestedThemeVariant="Dark">
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+    
+    <Application.Resources>
+        <common:StatusToColorConverter x:Key="StatusToColorConverter"/>
+        
+        <!-- Override Fluent Theme Accent Colors -->
+        <Color x:Key="SystemAccentColor">#00BFFF</Color>
+        <Color x:Key="SystemAccentColorDark1">#00A0DD</Color>
+        <Color x:Key="SystemAccentColorDark2">#0080BB</Color>
+        <Color x:Key="SystemAccentColorDark3">#006099</Color>
+        <Color x:Key="SystemAccentColorLight1">#33CFFF</Color>
+        <Color x:Key="SystemAccentColorLight2">#66DFFF</Color>
+        <Color x:Key="SystemAccentColorLight3">#99EFFF</Color>
+    </Application.Resources>
+</Application>

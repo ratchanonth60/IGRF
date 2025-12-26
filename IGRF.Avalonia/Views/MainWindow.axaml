@@ -1,0 +1,225 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:IGRF.Avalonia.ViewModels"
+        xmlns:views="using:IGRF.Avalonia.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="800"
+        x:Class="IGRF.Avalonia.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="IGRF Interface Control Center"
+        Width="1400" Height="850"
+        MinWidth="1200" MinHeight="700"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="#0D0D0D"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Design.DataContext>
+        <vm:MainViewModel/>
+    </Design.DataContext>
+
+    <!-- Main Layout -->
+    <Grid RowDefinitions="Auto, *">
+        
+        <!-- Header Bar - Compact and Clean -->
+        <Border Grid.Row="0" Padding="20,35,20,12" Background="#141414">
+            <Grid RowDefinitions="Auto, Auto">
+                <!-- Top Row: Title + Status -->
+                <Grid Grid.Row="0" ColumnDefinitions="Auto, *, Auto">
+                    <!-- App Branding -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                        <TextBlock Text="IGRF" FontSize="28" FontWeight="Black" Foreground="#00D9FF"/>
+                        <TextBlock Text="CONTROL CENTER" FontSize="11" Foreground="#555555" VerticalAlignment="Center" 
+                                   LetterSpacing="3" Margin="0,4,0,0"/>
+                        <Border Height="20" Width="1" Background="#333333" Margin="8,0"/>
+                        <!-- Sensor Type Selector -->
+                        <ComboBox ItemsSource="{Binding SensorTypes}" 
+                                 SelectedItem="{Binding SelectedSensorType}" 
+                                 MinWidth="160"
+                                 Background="#1A1A1A"
+                                 Foreground="#CCCCCC"
+                                 BorderBrush="#333333"
+                                 CornerRadius="6"
+                                 Padding="10,5"
+                                 FontSize="12">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    
+                    <!-- Status Pills - Center -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
+                        <Border CornerRadius="20" Padding="12,6" Background="#1A1A1A" BorderBrush="#333333" BorderThickness="1">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Ellipse Width="8" Height="8" Fill="{Binding SensorColor}"/>
+                                <TextBlock Text="{Binding SensorStatus, StringFormat='Sensor: {0}'}" Foreground="#AAAAAA" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <Border CornerRadius="20" Padding="12,6" Background="#1A1A1A" BorderBrush="#333333" BorderThickness="1">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Ellipse Width="8" Height="8" Fill="{Binding ControllerColor}"/>
+                                <TextBlock Text="{Binding ControllerStatus, StringFormat='Controller: {0}'}" Foreground="#AAAAAA" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                    
+                    <!-- Quick Actions - Right -->
+                    <Button Grid.Column="2" Command="{Binding RefreshPortsCommand}" Content="⟳ Refresh Ports" 
+                            Padding="12,6" CornerRadius="6" FontSize="12" Background="#1A1A1A" Foreground="#888888"
+                            BorderBrush="#333333" BorderThickness="1"/>
+                </Grid>
+                
+                <!-- Connection Bar - Compact -->
+                <Border Grid.Row="1" Margin="0,12,0,0" Padding="12,10" CornerRadius="8" Background="#1A1A1A">
+                    <StackPanel Orientation="Horizontal" Spacing="20">
+                        <!-- Serial Sensor Port -->
+                        <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsSerialSensor}">
+                            <TextBlock Text="Sensor Port:" Foreground="#666666" VerticalAlignment="Center" FontSize="12"/>
+                            <ComboBox ItemsSource="{Binding PortList}" SelectedItem="{Binding SelectedSensorPort}" 
+                                     MinWidth="140" Background="#252525" Foreground="#CCCCCC" FontSize="12"/>
+                            <Button Command="{Binding ToggleSensorCommand}" Content="{Binding SensorStatus}" 
+                                    Background="{Binding SensorColor}" Foreground="White" Padding="14,5" 
+                                    CornerRadius="5" MinWidth="65" FontSize="11" FontWeight="Bold"/>
+                        </StackPanel>
+                        
+                        <!-- MFG TCP Connection -->
+                        <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsMfgSensor}">
+                            <TextBlock Text="IP:" Foreground="#666666" VerticalAlignment="Center" FontSize="12"/>
+                            <TextBox Text="{Binding MfgIpAddress}" MinWidth="110" Background="#252525" 
+                                    Foreground="#CCCCCC" CornerRadius="5" Padding="8,4" FontSize="12"/>
+                            <TextBlock Text="Port:" Foreground="#666666" VerticalAlignment="Center" FontSize="12"/>
+                            <TextBox Text="{Binding MfgPort}" MinWidth="55" Background="#252525" 
+                                    Foreground="#CCCCCC" CornerRadius="5" Padding="8,4" FontSize="12"/>
+                            <Button Command="{Binding ToggleSensorCommand}" Content="{Binding SensorStatus}" 
+                                    Background="{Binding SensorColor}" Foreground="White" Padding="14,5" 
+                                    CornerRadius="5" MinWidth="65" FontSize="11" FontWeight="Bold"/>
+                        </StackPanel>
+                        
+                        <Border Width="1" Height="24" Background="#333333" Margin="5,0"/>
+                        
+                        <!-- Controller Port -->
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Controller:" Foreground="#666666" VerticalAlignment="Center" FontSize="12"/>
+                            <ComboBox ItemsSource="{Binding PortList}" SelectedItem="{Binding SelectedControllerPort}" 
+                                     MinWidth="140" Background="#252525" Foreground="#CCCCCC" FontSize="12"/>
+                            <Button Command="{Binding ToggleControllerCommand}" Content="{Binding ControllerStatus}" 
+                                    Background="{Binding ControllerColor}" Foreground="White" Padding="14,5" 
+                                    CornerRadius="5" MinWidth="65" FontSize="11" FontWeight="Bold"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Content Area with Tabs -->
+        <TabControl Grid.Row="1" Margin="0" Background="#0D0D0D" Padding="0">
+            <TabControl.Styles>
+                <Style Selector="TabItem">
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="Foreground" Value="#666666"/>
+                    <Setter Property="Padding" Value="20,12"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                </Style>
+                <Style Selector="TabItem:pointerover">
+                    <Setter Property="Foreground" Value="#BBBBBB"/>
+                    <Setter Property="BorderBrush" Value="#333333"/>
+                </Style>
+                <Style Selector="TabItem:selected">
+                    <Setter Property="Foreground" Value="#00D9FF"/>
+                    <Setter Property="BorderBrush" Value="#00BFFF"/>
+                </Style>
+            </TabControl.Styles>
+
+            <!-- Dashboard Tab -->
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="📊" FontSize="14"/>
+                        <TextBlock Text="Dashboard"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:DashboardView/>
+            </TabItem>
+
+            <!-- PID Tuning Tab -->
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="🎛️" FontSize="14"/>
+                        <TextBlock Text="PID Tuning"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:TuningView/>
+            </TabItem>
+
+            <!-- Sensor Info Tab -->
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="🌡️" FontSize="14"/>
+                        <TextBlock Text="Sensor Info"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:SensorInfoView/>
+            </TabItem>
+
+            <!-- Satellite Map Tab -->
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="🌍" FontSize="14"/>
+                        <TextBlock Text="Satellite"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:SatelliteView/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+
+    <Window.Styles>
+        <!-- Button Base Style -->
+        <Style Selector="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button:pointerover">
+            <Setter Property="Opacity" Value="0.9"/>
+        </Style>
+        <Style Selector="Button:pressed">
+            <Setter Property="Opacity" Value="0.75"/>
+        </Style>
+        
+        <!-- ComboBox Style -->
+        <Style Selector="ComboBox">
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#333333"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="ComboBox:pointerover">
+            <Setter Property="BorderBrush" Value="#00BFFF66"/>
+        </Style>
+        
+        <!-- TextBox Style -->
+        <Style Selector="TextBox">
+            <Setter Property="BorderBrush" Value="#333333"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="#00BFFF"/>
+        </Style>
+    </Window.Styles>
+
+</Window>

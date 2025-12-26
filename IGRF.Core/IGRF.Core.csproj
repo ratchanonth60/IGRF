@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <RootNamespace>IGRF_Interface</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Geo">
+      <HintPath>$(MSBuildProjectDirectory)\lib\Geo.dll</HintPath>
+    </Reference>
+    <Reference Include="One_Sgp4">
+      <HintPath>$(MSBuildProjectDirectory)\lib\One_Sgp4.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Ports" Version="4.7.0" />
+    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>

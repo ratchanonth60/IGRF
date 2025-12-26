@@ -1,0 +1,328 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sp="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+             xmlns:vm="clr-namespace:IGRF.Avalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="IGRF.Avalonia.Views.TuningView"
+             x:DataType="vm:MainViewModel">
+    
+    <UserControl.Styles>
+        <!-- Slider Styles with Animations -->
+        <Style Selector="Slider">
+            <Setter Property="Foreground" Value="#00BFFF"/>
+        </Style>
+        
+        <Style Selector="Slider /template/ Thumb">
+            <Setter Property="Background" Value="#00BFFF"/>
+            <Setter Property="BorderBrush" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+                    <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="Slider /template/ Thumb:pointerover">
+            <Setter Property="RenderTransform" Value="scale(1.3)"/>
+            <Setter Property="Background" Value="#00DFFF"/>
+        </Style>
+        
+        <Style Selector="Slider /template/ Thumb:pressed">
+            <Setter Property="RenderTransform" Value="scale(1.1)"/>
+            <Setter Property="Background" Value="#0099CC"/>
+        </Style>
+
+        <!-- Button Toggle Styles -->
+        <Style Selector="Button.pid-toggle">
+            <Setter Property="Background" Value="#303030"/>
+            <Setter Property="Foreground" Value="#AAAAAA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#505050"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.3"/>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.3"/>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <!-- Section Header Style -->
+        <Style Selector="TextBlock.section-header">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+    </UserControl.Styles>
+    
+    <Grid ColumnDefinitions="*, 320" Margin="15,10,15,15">
+        <!-- Charts Area -->
+        <Grid Grid.Column="0" RowDefinitions="*,*,*" RowSpacing="10">
+            <!-- X-Axis Graph -->
+            <Border Grid.Row="0" CornerRadius="8" ClipToBounds="True" BorderThickness="1" BorderBrush="#00BFFF33">
+                <Grid>
+                    <sp:AvaPlot Name="PlotX"/>
+                    <!-- Value Overlay -->
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Opacity="0.9">
+                        <Border Background="#80000000" CornerRadius="4" Padding="8,4">
+                            <StackPanel>
+                                <TextBlock Text="X-Axis Error (nT)" FontSize="10" Foreground="#888888"/>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{Binding ErrorX, StringFormat=S1: {0:F2}}" Foreground="#00BFFF" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding ErrorX2, StringFormat=S2: {0:F2}}" Foreground="#FFA500" FontWeight="Bold" FontSize="12"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            
+            <!-- Y-Axis Graph -->
+            <Border Grid.Row="1" CornerRadius="8" ClipToBounds="True" BorderThickness="1" BorderBrush="#4A9EFF33">
+                <Grid>
+                    <sp:AvaPlot Name="PlotY"/>
+                    <!-- Value Overlay -->
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Opacity="0.9">
+                        <Border Background="#80000000" CornerRadius="4" Padding="8,4">
+                            <StackPanel>
+                                <TextBlock Text="Y-Axis Error (nT)" FontSize="10" Foreground="#888888"/>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{Binding ErrorY, StringFormat=S1: {0:F2}}" Foreground="#4A9EFF" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding ErrorY2, StringFormat=S2: {0:F2}}" Foreground="#FFA500" FontWeight="Bold" FontSize="12"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            
+            <!-- Z-Axis Graph -->
+            <Border Grid.Row="2" CornerRadius="8" ClipToBounds="True" BorderThickness="1" BorderBrush="#7B68EE33">
+                <Grid>
+                    <sp:AvaPlot Name="PlotZ"/>
+                    <!-- Value Overlay -->
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Opacity="0.9">
+                        <Border Background="#80000000" CornerRadius="4" Padding="8,4">
+                            <StackPanel>
+                                <TextBlock Text="Z-Axis Error (nT)" FontSize="10" Foreground="#888888"/>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{Binding ErrorZ, StringFormat=S1: {0:F2}}" Foreground="#7B68EE" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding ErrorZ2, StringFormat=S2: {0:F2}}" Foreground="#FFA500" FontWeight="Bold" FontSize="12"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+        
+        <!-- Controls Panel -->
+        <Border Grid.Column="1" CornerRadius="10" Padding="12" Margin="10,0,0,0" BorderThickness="1" BorderBrush="#FFFFFF11">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                    <GradientStop Color="#252525" Offset="0"/>
+                    <GradientStop Color="#1A1A1A" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <ScrollViewer>
+                <StackPanel Spacing="10">
+                    <TextBlock Classes="section-header" Text="⚡ PID Parameters"/>
+                    
+                    <!-- PID Axis Selector -->
+                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                        <Button Classes="pid-toggle" Content="PID X"
+                                Command="{Binding SelectPidAxisCommand}" CommandParameter="X" 
+                                HorizontalAlignment="Stretch"/>
+                        <Button Grid.Column="1" Classes="pid-toggle" Content="PID Y" 
+                                Command="{Binding SelectPidAxisCommand}" CommandParameter="Y"
+                                HorizontalAlignment="Stretch"/>
+                        <Button Grid.Column="2" Classes="pid-toggle" Content="PID Z" 
+                                Command="{Binding SelectPidAxisCommand}" CommandParameter="Z"
+                                HorizontalAlignment="Stretch"/>
+                    </Grid>
+                    
+                    <!-- Kp -->
+                    <Border Background="#20202099" CornerRadius="6" Padding="10">
+                        <StackPanel Spacing="4">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBlock Text="Proportional (Kp)" VerticalAlignment="Center" Foreground="#CCCCCC" FontSize="12"/>
+                                <Border Grid.Column="1" Background="#00BFFF33" CornerRadius="4" Padding="6,2">
+                                    <TextBlock Text="{Binding Kp, StringFormat='{}{0:F2}'}" Foreground="#00BFFF" FontWeight="Bold" FontSize="12"/>
+                                </Border>
+                            </Grid>
+                            <Slider Value="{Binding Kp}" Minimum="0" Maximum="10" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Ki -->
+                    <Border Background="#20202099" CornerRadius="6" Padding="10">
+                        <StackPanel Spacing="4">
+                             <Grid ColumnDefinitions="*, Auto">
+                                 <TextBlock Text="Integral (Ki)" VerticalAlignment="Center" Foreground="#CCCCCC" FontSize="12"/>
+                                 <Border Grid.Column="1" Background="#00BFFF33" CornerRadius="4" Padding="6,2">
+                                     <TextBlock Text="{Binding Ki, StringFormat='{}{0:F3}'}" Foreground="#00BFFF" FontWeight="Bold" FontSize="12"/>
+                                 </Border>
+                             </Grid>
+                            <Slider Value="{Binding Ki}" Minimum="0" Maximum="5" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Kd -->
+                    <Border Background="#20202099" CornerRadius="6" Padding="10">
+                        <StackPanel Spacing="4">
+                            <Grid ColumnDefinitions="*, Auto">
+                                 <TextBlock Text="Derivative (Kd)" VerticalAlignment="Center" Foreground="#CCCCCC" FontSize="12"/>
+                                 <Border Grid.Column="1" Background="#00BFFF33" CornerRadius="4" Padding="6,2">
+                                     <TextBlock Text="{Binding Kd, StringFormat='{}{0:F3}'}" Foreground="#00BFFF" FontWeight="Bold" FontSize="12"/>
+                                 </Border>
+                             </Grid>
+                            <Slider Value="{Binding Kd}" Minimum="0" Maximum="5" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Separator Background="#444444" Height="1" Margin="0,8"/>
+                    <TextBlock Classes="section-header" Text="🎯 Setpoints"/>
+                    
+                    <CheckBox Content="Auto (From Satellite)" IsChecked="{Binding IsAutoSetpoint}" Foreground="White"/>
+
+                    <!-- Setpoint X -->
+                    <StackPanel>
+                        <TextBlock Text="Target X (nT)" Foreground="#AAAAAA" FontSize="11"/>
+                        <TextBox Text="{Binding SetpointX}" IsEnabled="{Binding !IsAutoSetpoint}"/>
+                    </StackPanel>
+                    
+                    <!-- Setpoint Y -->
+                    <StackPanel>
+                        <TextBlock Text="Target Y (nT)" Foreground="#AAAAAA" FontSize="11"/>
+                        <TextBox Text="{Binding SetpointY}" IsEnabled="{Binding !IsAutoSetpoint}"/>
+                    </StackPanel>
+                    
+                    <!-- Setpoint Z -->
+                    <StackPanel>
+                        <TextBlock Text="Target Z (nT)" Foreground="#AAAAAA" FontSize="11"/>
+                        <TextBox Text="{Binding SetpointZ}" IsEnabled="{Binding !IsAutoSetpoint}"/>
+                    </StackPanel>
+
+                    <Separator Background="#444444" Height="1" Margin="0,8"/>
+                    <TextBlock Classes="section-header" Text="Advanced PID Controls"/>
+                    
+                    <!-- Axis X -->
+                    <TextBlock Text="X-Axis:" FontWeight="SemiBold" Foreground="#00BFFF" Margin="0,5,0,2" FontSize="12"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Min Output:" Foreground="#999999" FontSize="10"/>
+                            <TextBox Text="{Binding MinOutputX}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Max Output:" Foreground="#999999" FontSize="10"/>
+                            <TextBox Text="{Binding MaxOutputX}"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel>
+                        <TextBlock Text="Manual Setpoint:" Foreground="#999999" FontSize="10"/>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBox Grid.Column="0" Text="{Binding ManualSetpointX}" Margin="0,0,5,0"/>
+                            <Button Grid.Column="1" Content="Set" Command="{Binding SetTargetXCommand}" MinWidth="50"/>
+                        </Grid>
+                    </StackPanel>
+                    
+                    <!-- Axis Y -->
+                    <TextBlock Text="Y-Axis:" FontWeight="SemiBold" Foreground="#4A9EFF" Margin="0,8,0,2" FontSize="12"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Min Output:" Foreground="#999999" FontSize="10"/>
+                            <TextBox Text="{Binding MinOutputY}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Max Output:" Foreground="#999999" FontSize="10"/>
+                            <TextBox Text="{Binding MaxOutputY}"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel>
+                        <TextBlock Text="Manual Setpoint:" Foreground="#999999" FontSize="10"/>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBox Grid.Column="0" Text="{Binding ManualSetpointY}" Margin="0,0,5,0"/>
+                            <Button Grid.Column="1" Content="Set" Command="{Binding SetTargetYCommand}" MinWidth="50"/>
+                        </Grid>
+                    </StackPanel>
+                    
+                    <!-- Axis Z -->
+                    <TextBlock Text="Z-Axis:" FontWeight="SemiBold" Foreground="#7B68EE" Margin="0,8,0,2" FontSize="12"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Min Output:" Foreground="#999999" FontSize="10"/>
+                            <TextBox Text="{Binding MinOutputZ}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Max Output:" Foreground="#999999" FontSize="10"/>
+                            <TextBox Text="{Binding MaxOutputZ}"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel>
+                        <TextBlock Text="Manual Setpoint:" Foreground="#999999" FontSize="10"/>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBox Grid.Column="0" Text="{Binding ManualSetpointZ}" Margin="0,0,5,0"/>
+                            <Button Grid.Column="1" Content="Set" Command="{Binding SetTargetZCommand}" MinWidth="50"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <Separator Background="#444444" Height="1" Margin="0,8"/>
+                    <TextBlock Classes="section-header" Text="Kalman Filter Tuning"/>
+                    
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="5">
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="R (X):" Foreground="#00BFFF" FontSize="10"/>
+                            <TextBox Text="{Binding FilterRX}"/>
+                            <Button Content="Set" Command="{Binding SetFilterRCommand}" CommandParameter="X" Margin="0,2,0,0" FontSize="10"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="R (Y):" Foreground="#4A9EFF" FontSize="10"/>
+                            <TextBox Text="{Binding FilterRY}"/>
+                            <Button Content="Set" Command="{Binding SetFilterRCommand}" CommandParameter="Y" Margin="0,2,0,0" FontSize="10"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="R (Z):" Foreground="#7B68EE" FontSize="10"/>
+                            <TextBox Text="{Binding FilterRZ}"/>
+                            <Button Content="Set" Command="{Binding SetFilterRCommand}" CommandParameter="Z" Margin="0,2,0,0" FontSize="10"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Separator Background="#444444" Height="1" Margin="0,8"/>
+                    <TextBlock Classes="section-header" Text="Configuration"/>
+                    
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="5">
+                        <Button Grid.Column="0" Content="💾 Save" Command="{Binding SaveConfigCommand}" FontSize="11"/>
+                        <Button Grid.Column="1" Content="📂 Load" Command="{Binding LoadConfigCommand}" FontSize="11"/>
+                    </Grid>
+                    
+                    <Button Content="🔄 Master Reset" Command="{Binding MasterResetCommand}" 
+                            Background="#DD4444" Foreground="White" FontWeight="Bold"/>
+
+                    <Separator Background="#444444" Height="1" Margin="0,8"/>
+                    <TextBlock Classes="section-header" Text="Operations"/>
+                    
+                    <Button Content="{Binding IsLogging, StringFormat='Log Data: {0}'}" 
+                            Command="{Binding ToggleLoggingCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            
+                    <TextBlock Text="{Binding LogStatus}" Foreground="#AAAAAA" FontSize="11" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding LogCountDisplay, StringFormat='Logged: {0} rows'}" Foreground="#00BFFF" FontSize="10" HorizontalAlignment="Center"/>
+
+                    <Button Content="Zerorize Sensor" 
+                            Command="{Binding ZerorizeSensorCommand}"
+                            Background="#552222" Foreground="#FF9999"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

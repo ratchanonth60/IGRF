@@ -1,0 +1,177 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:IGRF.Avalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="IGRF.Avalonia.Views.DashboardView"
+             x:DataType="vm:MainViewModel">
+    
+    <UserControl.Styles>
+        <!-- Card Hover Animation -->
+        <Style Selector="Border.metric-card">
+            <Setter Property="RenderTransform" Value="scaleX(1) scaleY(1)"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        
+        <Style Selector="Border.metric-card:pointerover">
+            <Setter Property="RenderTransform" Value="scaleX(1.03) scaleY(1.03)"/>
+            <Setter Property="BorderBrush" Value="#00BFFF66"/>
+        </Style>
+
+        <!-- Value Pulse Animation -->
+        <Style Selector="TextBlock.value">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.15" Easing="CubicEaseOut"/>
+                </Transitions>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+    
+    <Grid Margin="30,20,30,30" RowDefinitions="Auto, Auto, *">
+        
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="System Overview" FontSize="22" FontWeight="Bold" Foreground="White" Margin="0,0,0,20"/>
+        
+        <!-- Metric Cards -->
+        <Grid Grid.Row="1" ColumnDefinitions="*, *, *" ColumnSpacing="15" Margin="0,0,0,20">
+            
+            <!-- X Axis Card -->
+            <Border Grid.Column="0" Classes="metric-card" CornerRadius="12" Padding="25,20" 
+                    BorderThickness="1" BorderBrush="#00BFFF22">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                        <GradientStop Color="#1A1A2E" Offset="0"/>
+                        <GradientStop Color="#16213E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <TextBlock Text="MAGNETIC X" Foreground="#999999" FontSize="12" FontWeight="SemiBold" LetterSpacing="1"/>
+                        <Border Grid.Column="1" Background="#00BFFF33" CornerRadius="10" Padding="8,2">
+                            <TextBlock Text="AXIS 1" FontSize="9" Foreground="#00BFFF" FontWeight="Bold"/>
+                        </Border>
+                    </Grid>
+                    <TextBlock Classes="value" Text="{Binding MagX, StringFormat='{}{0:F2}'}" 
+                              FontSize="48" FontWeight="Black" Foreground="#00BFFF"/>
+                    <TextBlock Text="nT" Foreground="#00BFFF99" FontSize="14" HorizontalAlignment="Right" Margin="0,-8,0,0"/>
+                    <Separator Background="#FFFFFF11" Height="1" Margin="0,8"/>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{Binding ErrorX, StringFormat='Error: {0:F2} nT'}" 
+                                  Foreground="#FF5555" FontSize="13"/>
+                        <TextBlock Text="{Binding ErrorPerX, StringFormat='({0:F1}%)'}" 
+                                  Foreground="#FF999999" FontSize="11"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Y Axis Card -->
+            <Border Grid.Column="1" Classes="metric-card" CornerRadius="12" Padding="25,20"
+                    BorderThickness="1" BorderBrush="#4A9EFF33">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                        <GradientStop Color="#1A252E" Offset="0"/>
+                        <GradientStop Color="#16303E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <TextBlock Text="MAGNETIC Y" Foreground="#999999" FontSize="12" FontWeight="SemiBold" LetterSpacing="1"/>
+                        <Border Grid.Column="1" Background="#4A9EFF33" CornerRadius="10" Padding="8,2">
+                            <TextBlock Text="AXIS 2" FontSize="9" Foreground="#4A9EFF" FontWeight="Bold"/>
+                        </Border>
+                    </Grid>
+                    <TextBlock Classes="value" Text="{Binding MagY, StringFormat='{}{0:F2}'}" 
+                              FontSize="48" FontWeight="Black" Foreground="#4A9EFF"/>
+                    <TextBlock Text="nT" Foreground="#4A9EFF99" FontSize="14" HorizontalAlignment="Right" Margin="0,-8,0,0"/>
+                    <Separator Background="#FFFFFF11" Height="1" Margin="0,8"/>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{Binding ErrorY, StringFormat='Error: {0:F2} nT'}" 
+                                  Foreground="#FF8888" FontSize="12"/>
+                        <TextBlock Text="{Binding ErrorPerY, StringFormat='({0:F1}%)'}" 
+                                  Foreground="#FF999999" FontSize="11"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Z-Axis Card -->
+            <Border Grid.Column="2" Classes="metric-card" CornerRadius="12" Padding="25,20" 
+                    BorderThickness="1" BorderBrush="#4A9EFF33">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                        <GradientStop Color="#1A252E" Offset="0"/>
+                        <GradientStop Color="#16303E" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <TextBlock Text="MAGNETIC Z" Foreground="#999999" FontSize="12" FontWeight="SemiBold" LetterSpacing="1"/>
+                        <Border Grid.Column="1" Background="#4A9EFF44" CornerRadius="10" Padding="8,2">
+                            <TextBlock Text="AXIS 3" FontSize="9" FontWeight="Bold" Foreground="#4A9EFF"/>
+                        </Border>
+                    </Grid>
+                    <TextBlock Classes="value" Text="{Binding MagZ, StringFormat='{}{0:F2}'}" 
+                              FontSize="48" FontWeight="Black" Foreground="#4A9EFF"/>
+                    <TextBlock Text="nT" Foreground="#4A9EFF99" FontSize="14" HorizontalAlignment="Right" Margin="0,-8,0,0"/>
+                    <Separator Background="#FFFFFF11" Height="1" Margin="0,8"/>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{Binding ErrorZ, StringFormat='Error: {0:F2} nT'}" 
+                                  Foreground="#FF8888" FontSize="12"/>
+                        <TextBlock Text="{Binding ErrorPerZ, StringFormat='({0:F1}%)'}" 
+                                  Foreground="#FF999999" FontSize="11"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+        
+        <!-- Info Area -->
+        <Border Grid.Row="2" CornerRadius="12" Padding="30" BorderThickness="1" BorderBrush="#333333" Background="#1A1A1A">
+            <Grid RowDefinitions="Auto, *, Auto">
+                <StackPanel Grid.Row="0" Spacing="15">
+                    <TextBlock Text="📊 System Status" FontSize="18" FontWeight="Bold" Foreground="White"/>
+                    <Separator Background="#FFFFFF11" Height="1"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="15">
+                    <Border Background="#00BFFF22" CornerRadius="25" Padding="20,10">
+                        <TextBlock Text="⚡ SYSTEM NOMINAL" Foreground="#00D9FF" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="All magnetic field sensors operating normally" 
+                              Foreground="#AAAAAA" FontSize="14" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Navigate to 'PID Tuning' or 'Satellite Map' for detailed controls" 
+                              Foreground="#888888" FontSize="12" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+
+                <Grid Grid.Row="2" ColumnDefinitions="*, *, *" ColumnSpacing="10">
+                    <Border Grid.Column="0" CornerRadius="8" Padding="15,10" BorderThickness="1" BorderBrush="#333333" Background="#1A1A1A">
+                        <StackPanel HorizontalAlignment="Center" Spacing="4">
+                            <TextBlock Text="🎯 Target Mode" FontSize="11" Foreground="#666666" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding IsAutoSetpoint}" 
+                                      FontSize="14" FontWeight="Bold" Foreground="#00BFFF" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="1" CornerRadius="8" Padding="15,10" BorderThickness="1" BorderBrush="#333333" Background="#1A1A1A">
+                        <StackPanel HorizontalAlignment="Center" Spacing="4">
+                            <TextBlock Text="📡 Data Rate" FontSize="11" Foreground="#666666" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Real-time" FontSize="14" FontWeight="Bold" Foreground="#4A9EFF" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="2" CornerRadius="8" Padding="15,10" BorderThickness="1" BorderBrush="#333333" Background="#1A1A1A">
+                        <StackPanel HorizontalAlignment="Center" Spacing="4">
+                            <TextBlock Text="📝 Logging" FontSize="11" Foreground="#666666" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding IsLogging}" 
+                                      FontSize="14" FontWeight="Bold" Foreground="#7B68EE" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
