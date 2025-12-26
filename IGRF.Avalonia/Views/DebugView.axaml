@@ -1,0 +1,112 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:IGRF.Avalonia.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+             x:Class="IGRF.Avalonia.Views.DebugView"
+             x:DataType="vm:MainViewModel">
+    
+    <Grid Margin="15" RowDefinitions="Auto, *">
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="15" Margin="0,0,0,15">
+            <TextBlock Text="🐛 Debug Console" FontSize="20" FontWeight="Bold" Foreground="White"/>
+            <Button Content="Clear Log" Command="{Binding ClearDebugLogCommand}" 
+                    Background="#552222" Foreground="#FF9999" Padding="10,5"/>
+        </StackPanel>
+        
+        <Grid Grid.Row="1" ColumnDefinitions="*, 350">
+            <!-- Main Log Area -->
+            <Border Grid.Column="0" CornerRadius="8" Background="#0D0D0D" BorderBrush="#333333" BorderThickness="1" Margin="0,0,10,0">
+                <Grid RowDefinitions="Auto, *">
+                    <Border Grid.Row="0" Background="#1A1A1A" CornerRadius="8,8,0,0" Padding="12,8">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBlock Text="📋 Activity Log" FontWeight="Bold" Foreground="#00BFFF" VerticalAlignment="Center"/>
+                            <CheckBox Grid.Column="1" Content="Auto-scroll" IsChecked="{Binding DebugAutoScroll}" 
+                                      Foreground="#AAAAAA" FontSize="11"/>
+                        </Grid>
+                    </Border>
+                    <ScrollViewer Grid.Row="1" Name="LogScrollViewer">
+                        <TextBox Text="{Binding DebugLogText}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
+                                 FontFamily="Consolas, Courier New, monospace" FontSize="11"
+                                 Background="Transparent" Foreground="#88FF88" BorderThickness="0"
+                                 Padding="10"/>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+            
+            <!-- Right Panel -->
+            <Border Grid.Column="1" CornerRadius="8" Background="#151515" BorderBrush="#333333" BorderThickness="1" Padding="12">
+                <ScrollViewer>
+                    <StackPanel Spacing="15">
+                        <!-- Raw Data Display -->
+                        <TextBlock Text="📡 Last Raw Packet" FontWeight="Bold" Foreground="#FFA500" FontSize="13"/>
+                        <Border Background="#0D0D0D" CornerRadius="6" Padding="10">
+                            <TextBox Text="{Binding LastRawPacketHex}" IsReadOnly="True" AcceptsReturn="True"
+                                     FontFamily="Consolas" FontSize="10" Height="100" TextWrapping="Wrap"
+                                     Background="Transparent" Foreground="#AAAAAA" BorderThickness="0"/>
+                        </Border>
+                        
+                        <Separator Background="#333333" Height="1"/>
+                        
+                        <!-- Send Custom Command -->
+                        <TextBlock Text="⌨️ Send Command (MFG)" FontWeight="Bold" Foreground="#00BFFF" FontSize="13"/>
+                        <TextBlock Text="Format: TYPE ADDRESS DATA (e.g., 0 0 2)" Foreground="#666666" FontSize="10"/>
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBox Grid.Column="0" Text="{Binding CustomCommand}" 
+                                     Watermark="Enter command..." Margin="0,0,5,0"
+                                     FontFamily="Consolas" Background="#0D0D0D"/>
+                            <Button Grid.Column="1" Content="Send" Command="{Binding SendCustomCommandCommand}" 
+                                    Background="#2A5A8A" MinWidth="60"/>
+                        </Grid>
+                        
+                        <Separator Background="#333333" Height="1"/>
+                        
+                        <!-- Connection Info -->
+                        <TextBlock Text="🔌 Connection Status" FontWeight="Bold" Foreground="#4A9EFF" FontSize="13"/>
+                        <Border Background="#0D0D0D" CornerRadius="6" Padding="10">
+                            <StackPanel Spacing="5">
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <TextBlock Text="Sensor:" Foreground="#666666" Width="80"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding SensorStatus}" FontWeight="Bold"
+                                              Foreground="{Binding SensorStatus, Converter={StaticResource StatusToColorConverter}}"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <TextBlock Text="Controller:" Foreground="#666666" Width="80"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding ControllerStatus}" FontWeight="Bold"
+                                              Foreground="{Binding ControllerStatus, Converter={StaticResource StatusToColorConverter}}"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <TextBlock Text="MFG TCP:" Foreground="#666666" Width="80"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding MfgConnectionStatus}" FontWeight="Bold" Foreground="#00BFFF"/>
+                                </Grid>
+                                <Separator Background="#333333" Height="1" Margin="0,5"/>
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <TextBlock Text="Data Rate:" Foreground="#666666" Width="80"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding DataRate, StringFormat='{}{0:F1} Hz'}" Foreground="#00FF88"/>
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <TextBlock Text="Packets:" Foreground="#666666" Width="80"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding PacketCount, StringFormat='{}{0:N0}'}" Foreground="#CCCCCC"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        
+                        <Separator Background="#333333" Height="1"/>
+                        
+                        <!-- Quick Actions -->
+                        <TextBlock Text="⚡ Quick Actions" FontWeight="Bold" Foreground="#FFA500" FontSize="13"/>
+                        <StackPanel Spacing="5">
+                            <Button Content="Send 100Hz Command (0 0 0)" Command="{Binding SetRate100HzCommand}"
+                                    Background="#2A4A2A" Foreground="#88FF88" HorizontalAlignment="Stretch"/>
+                            <Button Content="Send 10Hz Command (0 0 2)" Command="{Binding SetRate10HzCommand}"
+                                    Background="#4A4A2A" Foreground="#FFDD88" HorizontalAlignment="Stretch"/>
+                            <Button Content="Send 1Hz Command (0 0 3)" Command="{Binding SetRate1HzCommand}"
+                                    Background="#4A3A2A" Foreground="#FFAA88" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

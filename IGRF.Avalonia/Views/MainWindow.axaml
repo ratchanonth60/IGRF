@@ -180,6 +180,17 @@
                 </TabItem.Header>
                 <views:SatelliteView/>
             </TabItem>
+
+            <!-- Debug Tab -->
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="🐛" FontSize="14"/>
+                        <TextBlock Text="Debug"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <views:DebugView/>
+            </TabItem>
         </TabControl>
     </Grid>
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -119,6 +120,188 @@ namespace IGRF.Avalonia.ViewModels
             {
                 CalculationResult = $"Error: {ex.Message}";
             }
+        }
+        
+        // --- TLE Management Properties ---
+        [ObservableProperty] private string _satelliteNoradId = "";
+        [ObservableProperty] private string _tleFetchStatus = "";
+        [ObservableProperty] private string _manualTleName = "";
+        [ObservableProperty] private string _manualTleLine1 = "";
+        [ObservableProperty] private string _manualTleLine2 = "";
+        
+        // --- Space-Track.org Credentials ---
+        [ObservableProperty] private string _spaceTrackUsername = "";
+        [ObservableProperty] private string _spaceTrackPassword = "";
+        [ObservableProperty] private bool _isSpaceTrackLoggedIn = false;
+        
+        private System.Net.Http.HttpClient? _spaceTrackClient;
+        private System.Net.CookieContainer? _cookieContainer;
+        
+        /// <summary>
+        /// Login to Space-Track.org and fetch TLE data
+        /// </summary>
+        [RelayCommand]
+        private async System.Threading.Tasks.Task FetchTleFromSpaceTrack()
+        {
+            if (string.IsNullOrWhiteSpace(SatelliteNoradId))
+            {
+                TleFetchStatus = "Please enter a NORAD ID";
+                return;
+            }
+            
+            if (string.IsNullOrWhiteSpace(SpaceTrackUsername) || string.IsNullOrWhiteSpace(SpaceTrackPassword))
+            {
+                TleFetchStatus = "Please enter Space-Track credentials";
+                return;
+            }
+            
+            TleFetchStatus = "Logging in to Space-Track.org...";
+            
+            try
+            {
+                // Setup HttpClient with cookie support
+                if (_cookieContainer == null)
+                {
+                    _cookieContainer = new System.Net.CookieContainer();
+                }
+                
+                var handler = new System.Net.Http.HttpClientHandler
+                {
+                    CookieContainer = _cookieContainer,
+                    UseCookies = true
+                };
+                
+                _spaceTrackClient = new System.Net.Http.HttpClient(handler);
+                _spaceTrackClient.Timeout = TimeSpan.FromSeconds(30);
+                
+                // Login to Space-Track.org
+                var loginUrl = "https://www.space-track.org/ajaxauth/login";
+                var loginContent = new System.Net.Http.FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("identity", SpaceTrackUsername),
+                    new KeyValuePair<string, string>("password", SpaceTrackPassword)
+                });
+                
+                var loginResponse = await _spaceTrackClient.PostAsync(loginUrl, loginContent);
+                var loginResult = await loginResponse.Content.ReadAsStringAsync();
+                
+                if (!loginResponse.IsSuccessStatusCode || loginResult.Contains("Failed"))
+                {
+                    TleFetchStatus = "Login failed. Check credentials.";
+                    IsSpaceTrackLoggedIn = false;
+                    return;
+                }
+                
+                IsSpaceTrackLoggedIn = true;
+                TleFetchStatus = "Fetching TLE data...";
+                
+                // Fetch TLE using GP class
+                string queryUrl = $"https://www.space-track.org/basicspacedata/query/class/gp/norad_cat_id/{SatelliteNoradId}/format/tle";
+                
+                var response = await _spaceTrackClient.GetStringAsync(queryUrl);
+                var lines = response.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                
+                if (lines.Length >= 3)
+                {
+                    string name = lines[0].Trim();
+                    string line1 = lines[1].Trim();
+                    string line2 = lines[2].Trim();
+                    
+                    var newSat = new SatelliteInfo 
+                    { 
+                        Name = name, 
+                        Line1 = line1, 
+                        Line2 = line2,
+                        ID = int.TryParse(SatelliteNoradId, out int id) ? id : 0
+                    };
+                    
+                    // Check if already exists and update or add
+                    bool found = false;
+                    for (int i = 0; i < SatelliteList.Count; i++)
+                    {
+                        if (SatelliteList[i].ID == newSat.ID || SatelliteList[i].Name == name)
+                        {
+                            SatelliteList[i] = newSat;
+                            found = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!found)
+                    {
+                        SatelliteList.Add(newSat);
+                    }
+                    
+                    SelectedSatellite = newSat;
+                    TleFetchStatus = $"✓ {name} (ID: {SatelliteNoradId})";
+                }
+                else if (lines.Length >= 2)
+                {
+                    // No name, just TLE lines
+                    string line1 = lines[0].Trim();
+                    string line2 = lines[1].Trim();
+                    
+                    var newSat = new SatelliteInfo 
+                    { 
+                        Name = $"Satellite {SatelliteNoradId}", 
+                        Line1 = line1, 
+                        Line2 = line2,
+                        ID = int.TryParse(SatelliteNoradId, out int id) ? id : 0
+                    };
+                    
+                    SatelliteList.Add(newSat);
+                    SelectedSatellite = newSat;
+                    TleFetchStatus = $"✓ Added: {newSat.Name}";
+                }
+                else
+                {
+                    TleFetchStatus = "No TLE data found for this ID";
+                }
+            }
+            catch (Exception ex)
+            {
+                TleFetchStatus = $"Error: {ex.Message}";
+                IsSpaceTrackLoggedIn = false;
+            }
+        }
+        
+        /// <summary>
+        /// Add a satellite manually with TLE data
+        /// </summary>
+        [RelayCommand]
+        private void AddManualSatellite()
+        {
+            if (string.IsNullOrWhiteSpace(ManualTleName) || 
+                string.IsNullOrWhiteSpace(ManualTleLine1) || 
+                string.IsNullOrWhiteSpace(ManualTleLine2))
+            {
+                TleFetchStatus = "Please fill all TLE fields";
+                return;
+            }
+            
+            // Validate TLE format
+            if (!ManualTleLine1.StartsWith("1 ") || !ManualTleLine2.StartsWith("2 "))
+            {
+                TleFetchStatus = "Invalid TLE format (must start with 1/2)";
+                return;
+            }
+            
+            var newSat = new SatelliteInfo 
+            { 
+                Name = ManualTleName.Trim(), 
+                Line1 = ManualTleLine1.Trim(), 
+                Line2 = ManualTleLine2.Trim()
+            };
+            
+            SatelliteList.Add(newSat);
+            SelectedSatellite = newSat;
+            
+            // Clear inputs
+            ManualTleName = "";
+            ManualTleLine1 = "";
+            ManualTleLine2 = "";
+            
+            TleFetchStatus = $"✓ Added: {newSat.Name}";
         }
     }
 }

@@ -155,9 +155,10 @@
                         <StackPanel Spacing="4">
                             <Grid ColumnDefinitions="*, Auto">
                                 <TextBlock Text="Proportional (Kp)" VerticalAlignment="Center" Foreground="#CCCCCC" FontSize="12"/>
-                                <Border Grid.Column="1" Background="#00BFFF33" CornerRadius="4" Padding="6,2">
-                                    <TextBlock Text="{Binding Kp, StringFormat='{}{0:F2}'}" Foreground="#00BFFF" FontWeight="Bold" FontSize="12"/>
-                                </Border>
+                                <TextBox Grid.Column="1" Text="{Binding Kp}" Width="70" 
+                                         Foreground="#00BFFF" FontWeight="Bold" FontSize="12"
+                                         Background="#00BFFF22" BorderBrush="#00BFFF55" BorderThickness="1"
+                                         CornerRadius="4" Padding="6,2" TextAlignment="Center"/>
                             </Grid>
                             <Slider Value="{Binding Kp}" Minimum="0" Maximum="10" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
                         </StackPanel>
@@ -166,12 +167,13 @@
                     <!-- Ki -->
                     <Border Background="#20202099" CornerRadius="6" Padding="10">
                         <StackPanel Spacing="4">
-                             <Grid ColumnDefinitions="*, Auto">
-                                 <TextBlock Text="Integral (Ki)" VerticalAlignment="Center" Foreground="#CCCCCC" FontSize="12"/>
-                                 <Border Grid.Column="1" Background="#00BFFF33" CornerRadius="4" Padding="6,2">
-                                     <TextBlock Text="{Binding Ki, StringFormat='{}{0:F3}'}" Foreground="#00BFFF" FontWeight="Bold" FontSize="12"/>
-                                 </Border>
-                             </Grid>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <TextBlock Text="Integral (Ki)" VerticalAlignment="Center" Foreground="#CCCCCC" FontSize="12"/>
+                                <TextBox Grid.Column="1" Text="{Binding Ki}" Width="70" 
+                                         Foreground="#00BFFF" FontWeight="Bold" FontSize="12"
+                                         Background="#00BFFF22" BorderBrush="#00BFFF55" BorderThickness="1"
+                                         CornerRadius="4" Padding="6,2" TextAlignment="Center"/>
+                            </Grid>
                             <Slider Value="{Binding Ki}" Minimum="0" Maximum="5" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
                         </StackPanel>
                     </Border>
@@ -180,11 +182,12 @@
                     <Border Background="#20202099" CornerRadius="6" Padding="10">
                         <StackPanel Spacing="4">
                             <Grid ColumnDefinitions="*, Auto">
-                                 <TextBlock Text="Derivative (Kd)" VerticalAlignment="Center" Foreground="#CCCCCC" FontSize="12"/>
-                                 <Border Grid.Column="1" Background="#00BFFF33" CornerRadius="4" Padding="6,2">
-                                     <TextBlock Text="{Binding Kd, StringFormat='{}{0:F3}'}" Foreground="#00BFFF" FontWeight="Bold" FontSize="12"/>
-                                 </Border>
-                             </Grid>
+                                <TextBlock Text="Derivative (Kd)" VerticalAlignment="Center" Foreground="#CCCCCC" FontSize="12"/>
+                                <TextBox Grid.Column="1" Text="{Binding Kd}" Width="70" 
+                                         Foreground="#00BFFF" FontWeight="Bold" FontSize="12"
+                                         Background="#00BFFF22" BorderBrush="#00BFFF55" BorderThickness="1"
+                                         CornerRadius="4" Padding="6,2" TextAlignment="Center"/>
+                            </Grid>
                             <Slider Value="{Binding Kd}" Minimum="0" Maximum="5" TickFrequency="0.01" IsSnapToTickEnabled="True"/>
                         </StackPanel>
                     </Border>

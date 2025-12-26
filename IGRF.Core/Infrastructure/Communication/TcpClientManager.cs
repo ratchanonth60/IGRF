@@ -141,5 +141,52 @@ namespace IGRF_Interface.Infrastructure.Communication
                 Disconnect();
             }
         }
+        
+        /// <summary>
+        /// Send a raw ASCII command to the MFG sensor
+        /// Commands are in format: "TYPE ADDRESS DATA\r\n"
+        /// </summary>
+        public async Task<bool> SendCommandAsync(string command)
+        {
+            if (_stream == null || !IsConnected) return false;
+            
+            try
+            {
+                // Ensure command ends with CRLF
+                if (!command.EndsWith("\r\n"))
+                {
+                    command += "\r\n";
+                }
+                
+                byte[] commandBytes = System.Text.Encoding.ASCII.GetBytes(command);
+                await _stream.WriteAsync(commandBytes, 0, commandBytes.Length);
+                await _stream.FlushAsync();
+                
+                System.Diagnostics.Debug.WriteLine($"[MFG] Sent command: {command.TrimEnd()}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MFG] Failed to send command: {ex.Message}");
+                return false;
+            }
+        }
+        
+        /// <summary>
+        /// Set the sampling rate of the MFG sensor
+        /// </summary>
+        /// <param name="rateCode">0=100Hz, 1=50Hz, 2=10Hz, 3=1Hz</param>
+        public async Task<bool> SetSamplingRateAsync(int rateCode)
+        {
+            if (rateCode < 0 || rateCode > 3)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rateCode), "Rate code must be 0-3");
+            }
+            
+            // Command format: "TYPE ADDRESS DATA"
+            // TYPE=0 (config command), ADDRESS=0 (sampling rate), DATA=rateCode
+            string command = $"0 0 {rateCode}";
+            return await SendCommandAsync(command);
+        }
     }
 }

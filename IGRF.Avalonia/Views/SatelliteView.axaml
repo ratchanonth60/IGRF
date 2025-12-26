@@ -63,6 +63,37 @@
                          </Grid>
                          <Slider Value="{Binding TimeSpeed}" Minimum="0" Maximum="1000" LargeChange="100" Margin="0,5"/>
                      </StackPanel>
+                     
+                     <Separator Background="#444444" Height="2" Margin="0,15"/>
+                     
+                     <!-- TLE Management -->
+                     <TextBlock Text="🛰️ TLE Management" FontWeight="Bold" FontSize="14" Foreground="#4A9EFF" HorizontalAlignment="Center"/>
+                     
+                     <!-- Space-Track.org Login -->
+                     <StackPanel Margin="0,8,0,0" Spacing="4">
+                         <TextBlock Text="Space-Track.org:" Foreground="#AAAAAA" FontSize="11"/>
+                         <TextBox Text="{Binding SpaceTrackUsername}" Watermark="Username (email)" FontSize="10" Height="24"/>
+                         <TextBox Text="{Binding SpaceTrackPassword}" Watermark="Password" PasswordChar="●" FontSize="10" Height="24"/>
+                         <Grid ColumnDefinitions="*, Auto" ColumnSpacing="5">
+                             <TextBox Grid.Column="0" Text="{Binding SatelliteNoradId}" Watermark="NORAD ID (e.g., 25544)"
+                                      FontFamily="Consolas" FontSize="11" Height="26"/>
+                             <Button Grid.Column="1" Content="Fetch" Command="{Binding FetchTleFromSpaceTrackCommand}"
+                                     Background="#2A5A8A" MinWidth="50" FontSize="11"/>
+                         </Grid>
+                         <TextBlock Text="{Binding TleFetchStatus}" Foreground="#888888" FontSize="10" TextWrapping="Wrap"/>
+                     </StackPanel>
+                     
+                     <Separator Background="#333333" Height="1" Margin="0,10"/>
+                     
+                     <!-- Manual TLE Input -->
+                     <TextBlock Text="Manual TLE Input:" Foreground="#AAAAAA" FontSize="11"/>
+                     <StackPanel Spacing="4">
+                         <TextBox Text="{Binding ManualTleName}" Watermark="Satellite Name" FontSize="11" Height="26"/>
+                         <TextBox Text="{Binding ManualTleLine1}" Watermark="TLE Line 1" FontFamily="Consolas" FontSize="10" Height="26"/>
+                         <TextBox Text="{Binding ManualTleLine2}" Watermark="TLE Line 2" FontFamily="Consolas" FontSize="10" Height="26"/>
+                         <Button Content="Add Satellite" Command="{Binding AddManualSatelliteCommand}"
+                                 Background="#2A4A2A" Foreground="#88FF88" HorizontalAlignment="Stretch" FontSize="11"/>
+                     </StackPanel>
                  </StackPanel>
              </ScrollViewer>
         </Border>
