@@ -33,7 +33,7 @@ namespace IGRF.Avalonia.ViewModels
                 
                 try
                 {
-                    string header = "Timestamp,MagX,MagY,MagZ,SetX,SetY,SetZ,OutX,OutY,OutZ,Kp,Ki,Kd\n";
+                    string header = "Timestamp,MagX,MagY,MagZ,MagX2,MagY2,MagZ2,SetX,SetY,SetZ,OutX,OutY,OutZ,Kp,Ki,Kd\n";
                     File.WriteAllText(_logFileName, header);
                     
                     _logCount = 0;

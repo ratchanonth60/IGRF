@@ -1,16 +1,17 @@
 using System;
 using IGRF_Interface.Core.Models;
 using IGRF_Interface.Core.Algorithms;
+using IGRF_Interface.Core.Interfaces;
 
 namespace IGRF_Interface.Core.Services
 {
-    public class CalculationService
+    public class CalculationService : ICalculationService
     {
         // Kalman Filters for smoothing sensor data
         private KalmanFilter _filterX = new KalmanFilter(0, 1, 1, 100);
         private KalmanFilter _filterY = new KalmanFilter(0, 1, 1, 100);
         private KalmanFilter _filterZ = new KalmanFilter(0, 1, 1, 100);
-        
+
         // Flag to initialize filters with first data value
         private bool _filtersInitialized = false;
 
@@ -21,28 +22,28 @@ namespace IGRF_Interface.Core.Services
 
         public CalculationService()
         {
-             // Geo.dll API is unknown - using simplified calculation instead
+            // Geo.dll API is unknown - using simplified calculation instead
         }
 
         public (double X, double Y, double Z) CalculateIGRF(double lat, double lon, double altKm, DateTime time)
         {
-             // TODO: Find correct Geo.dll API
-             // For now, return realistic Earth magnetic field values based on location
-             // Typical values: 20,000-60,000 nT total field
-             
-             // Simplified calculation - varies by latitude
-             double latRad = lat * Math.PI / 180.0;
-             
-             // Horizontal component varies with latitude
-             double horizontal = 30000 * Math.Cos(latRad);
-             double vertical = 40000 * Math.Sin(latRad);
-             
-             // Split horizontal into X (north) and Y (east) components
-             double X = horizontal * 0.9;  // Mostly northward
-             double Y = horizontal * 0.1;  // Small eastward component  
-             double Z = vertical;           // Downward (positive down)
-             
-             return (X, Y, Z);
+            // TODO: Find correct Geo.dll API
+            // For now, return realistic Earth magnetic field values based on location
+            // Typical values: 20,000-60,000 nT total field
+
+            // Simplified calculation - varies by latitude
+            double latRad = lat * Math.PI / 180.0;
+
+            // Horizontal component varies with latitude
+            double horizontal = 30000 * Math.Cos(latRad);
+            double vertical = 40000 * Math.Sin(latRad);
+
+            // Split horizontal into X (north) and Y (east) components
+            double X = horizontal * 0.9;  // Mostly northward
+            double Y = horizontal * 0.1;  // Small eastward component  
+            double Z = vertical;           // Downward (positive down)
+
+            return (X, Y, Z);
         }
 
         // Process Raw Data -> ProcessedData (Pure Logic)

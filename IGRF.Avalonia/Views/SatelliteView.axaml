@@ -94,6 +94,14 @@
                          <Button Content="Add Satellite" Command="{Binding AddManualSatelliteCommand}"
                                  Background="#2A4A2A" Foreground="#88FF88" HorizontalAlignment="Stretch" FontSize="11"/>
                      </StackPanel>
+                     
+                     <Separator Background="#333333" Height="1" Margin="0,15"/>
+                     
+                     <!-- 3D Globe Launcher -->
+                     <Button Content="🌍 Launch 3D Globe" Command="{Binding Open3DGlobeCommand}"
+                             HorizontalAlignment="Stretch" Height="40"
+                             Background="#2A5A8A" Foreground="White" FontWeight="Bold" FontSize="14"
+                             BorderThickness="1" BorderBrush="#88CCEE"/>
                  </StackPanel>
              </ScrollViewer>
         </Border>

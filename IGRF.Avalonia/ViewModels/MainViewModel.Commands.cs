@@ -69,5 +69,51 @@ namespace IGRF.Avalonia.ViewModels
         
         [RelayCommand]
         private async Task SetRate1Hz() => await SetSamplingRate(3);
+
+        /// <summary>
+        /// Launch the 3D Globe Visualization independently
+        /// </summary>
+        [RelayCommand]
+        private void Open3DGlobe()
+        {
+            try
+            {
+                // Path to IGRF.Globe3D.exe
+                // Assuming it's in the same output directory or sibling
+                string currentDir = System.AppDomain.CurrentDomain.BaseDirectory;
+                string globePath = System.IO.Path.Combine(currentDir, "IGRF.Globe3D.exe");
+                
+                // If not found in current dir, check if we are in dev environment (Avalonia/bin vs Globe3D/bin)
+                if (!System.IO.File.Exists(globePath))
+                {
+                    // Fallback for dev: ..\..\..\..\IGRF.Globe3D\bin\Debug\net10.0-windows\IGRF.Globe3D.exe
+                    string devPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(currentDir, @"..\..\..\..\IGRF.Globe3D\bin\Debug\net10.0-windows\IGRF.Globe3D.exe"));
+                    if (System.IO.File.Exists(devPath))
+                    {
+                        globePath = devPath;
+                    }
+                }
+
+                if (System.IO.File.Exists(globePath))
+                {
+                    var psi = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = globePath,
+                        UseShellExecute = true,  // Important for .NET Core apps sometimes
+                        WorkingDirectory = System.IO.Path.GetDirectoryName(globePath)
+                    };
+                    System.Diagnostics.Process.Start(psi);
+                    LogStatus = "Launched 3D Globe";
+                }
+                else
+                {
+                    LogStatus = "Globe 3D Executable not found";
+                }
+            }
+            catch (System.Exception ex)
+            {
+                LogStatus = $"Error launching 3D Globe: {ex.Message}";
+            }
+        }
     }
 }

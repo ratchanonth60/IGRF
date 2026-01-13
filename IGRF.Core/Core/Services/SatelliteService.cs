@@ -1,5 +1,6 @@
 using System;
 using One_Sgp4;
+using IGRF_Interface.Core.Interfaces;
 
 namespace IGRF_Interface.Core.Services
 {
@@ -17,19 +18,20 @@ namespace IGRF_Interface.Core.Services
     public class SatelliteInfo
     {
         public string Name { get; set; }
-        public int ID { get; set; }
+        public string ID { get; set; }
         public string Line1 { get; set; }
         public string Line2 { get; set; }
-        public override string ToString() => Name;
+        public string ObjectType { get; set; } = "UNKNOWN";
+        public override string ToString() => $"{Name} ({ObjectType})";
     }
 
-    public class SatelliteService
+    public class SatelliteService : ISatelliteService
     {
         private Tle _currentTle;
 
-        public void SetTLE(string line1, string line2, string line3)
+        public void SetTLE(string name, string tle1, string tle2)
         {
-            if (string.IsNullOrWhiteSpace(line2) || string.IsNullOrWhiteSpace(line3))
+            if (string.IsNullOrWhiteSpace(tle1) || string.IsNullOrWhiteSpace(tle2))
             {
                 _currentTle = null;
                 return;
@@ -37,11 +39,13 @@ namespace IGRF_Interface.Core.Services
 
             try
             {
-                // Wrapper  Parse TLE
-                _currentTle = ParserTLE.parseTle(line2, line3, line1);
+                // Wrapper Parse TLE
+                // Expected signature: parseTle(string adr1, string adr2, string name)
+                _currentTle = ParserTLE.parseTle(tle1, tle2, name);
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"TLE Parse Error for {name}: {ex.Message}");
                 _currentTle = null;
             }
         }

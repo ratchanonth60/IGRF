@@ -12,7 +12,7 @@ namespace IGRF.Avalonia.ViewModels
     {
         // --- PID Parameters (Per-Axis) ---
         [ObservableProperty] private string _selectedPidAxis = "X";
-        
+
         // Per-axis PID gains
         [ObservableProperty] private double _kpX = 1.0;
         [ObservableProperty] private double _kiX = 0.0;
@@ -23,7 +23,7 @@ namespace IGRF.Avalonia.ViewModels
         [ObservableProperty] private double _kpZ = 1.0;
         [ObservableProperty] private double _kiZ = 0.0;
         [ObservableProperty] private double _kdZ = 0.0;
-        
+
         // Computed properties for currently selected axis
         public double Kp
         {
@@ -40,13 +40,13 @@ namespace IGRF.Avalonia.ViewModels
             get => SelectedPidAxis switch { "X" => KdX, "Y" => KdY, "Z" => KdZ, _ => KdX };
             set { switch (SelectedPidAxis) { case "X": KdX = value; break; case "Y": KdY = value; break; case "Z": KdZ = value; break; } OnPropertyChanged(); }
         }
-        
+
         // --- Setpoints ---
         [ObservableProperty] private double _setpointX;
         [ObservableProperty] private double _setpointY;
         [ObservableProperty] private double _setpointZ;
         [ObservableProperty] private bool _isAutoSetpoint = true;
-        
+
         // --- PID Output Bounds ---
         [ObservableProperty] private double _minOutputX = -100.0;
         [ObservableProperty] private double _maxOutputX = 100.0;
@@ -54,22 +54,22 @@ namespace IGRF.Avalonia.ViewModels
         [ObservableProperty] private double _maxOutputY = 100.0;
         [ObservableProperty] private double _minOutputZ = -100.0;
         [ObservableProperty] private double _maxOutputZ = 100.0;
-        
+
         // --- Manual Setpoint Override ---
         [ObservableProperty] private double _manualSetpointX;
         [ObservableProperty] private double _manualSetpointY;
         [ObservableProperty] private double _manualSetpointZ;
-        
+
         // --- Kalman Filter R Tuning ---
         [ObservableProperty] private double _filterRX = 1.0;
         [ObservableProperty] private double _filterRY = 1.0;
         [ObservableProperty] private double _filterRZ = 1.0;
-        
+
         // --- PID Enable Flags ---
         [ObservableProperty] private bool _isPidXEnabled;
         [ObservableProperty] private bool _isPidYEnabled;
         [ObservableProperty] private bool _isPidZEnabled;
-        
+
         // Partial Methods to update Logic
         partial void OnKpXChanged(double value) => UpdatePidParams();
         partial void OnKiXChanged(double value) => UpdatePidParams();
@@ -80,7 +80,7 @@ namespace IGRF.Avalonia.ViewModels
         partial void OnKpZChanged(double value) => UpdatePidParams();
         partial void OnKiZChanged(double value) => UpdatePidParams();
         partial void OnKdZChanged(double value) => UpdatePidParams();
-        
+
         partial void OnSelectedPidAxisChanged(string value)
         {
             OnPropertyChanged(nameof(Kp));
@@ -95,7 +95,7 @@ namespace IGRF.Avalonia.ViewModels
             _pidY.Kp = KpY; _pidY.Ki = KiY; _pidY.Kd = KdY;
             _pidZ.Kp = KpZ; _pidZ.Ki = KiZ; _pidZ.Kd = KdZ;
         }
-        
+
         private void UpdatePidBounds()
         {
             if (_pidX == null || _pidY == null || _pidZ == null) return;
@@ -103,7 +103,7 @@ namespace IGRF.Avalonia.ViewModels
             _pidY.MinOutput = MinOutputY; _pidY.MaxOutput = MaxOutputY;
             _pidZ.MinOutput = MinOutputZ; _pidZ.MaxOutput = MaxOutputZ;
         }
-        
+
         [RelayCommand]
         public void SelectPidAxis(string axis)
         {
@@ -129,7 +129,7 @@ namespace IGRF.Avalonia.ViewModels
                     break;
             }
         }
-        
+
         [RelayCommand]
         public void SetTargetX()
         {
@@ -141,7 +141,7 @@ namespace IGRF.Avalonia.ViewModels
                 IsAutoSetpoint = false;
             }
         }
-        
+
         [RelayCommand]
         public void SetTargetY()
         {
@@ -153,7 +153,7 @@ namespace IGRF.Avalonia.ViewModels
                 IsAutoSetpoint = false;
             }
         }
-        
+
         [RelayCommand]
         public void SetTargetZ()
         {
@@ -165,28 +165,28 @@ namespace IGRF.Avalonia.ViewModels
                 IsAutoSetpoint = false;
             }
         }
-        
+
         [RelayCommand]
         public void SetFilterR(string axis)
         {
             switch (axis)
             {
                 case "X":
-                    _calcService.FilterX.R_Val = FilterRX;
+                    _calcService.FilterX.R = FilterRX;
                     break;
                 case "Y":
-                    _calcService.FilterY.R_Val = FilterRY;
+                    _calcService.FilterY.R = FilterRY;
                     break;
                 case "Z":
-                    _calcService.FilterZ.R_Val = FilterRZ;
+                    _calcService.FilterZ.R = FilterRZ;
                     break;
             }
         }
-        
+
         private void RunPidLogic(IGRF_Interface.Core.Algorithms.PidController pid, double setpoint, double measured, string axis)
         {
             double output = pid.Calculate(setpoint, measured);
-            
+
             switch (axis)
             {
                 case "X": _outputX = output; break;

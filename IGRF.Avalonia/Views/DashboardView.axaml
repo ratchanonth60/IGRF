@@ -44,7 +44,7 @@
         <Grid Grid.Row="1" ColumnDefinitions="*, *, *" ColumnSpacing="15" Margin="0,0,0,20">
             
             <!-- X Axis Card -->
-            <Border Grid.Column="0" Classes="metric-card" CornerRadius="12" Padding="25,20" 
+            <Border Grid.Column="0" Classes="metric-card" CornerRadius="12" Padding="20,20" 
                     BorderThickness="1" BorderBrush="#00BFFF22">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
@@ -59,21 +59,33 @@
                             <TextBlock Text="AXIS 1" FontSize="9" Foreground="#00BFFF" FontWeight="Bold"/>
                         </Border>
                     </Grid>
-                    <TextBlock Classes="value" Text="{Binding MagX, StringFormat='{}{0:F2}'}" 
-                              FontSize="48" FontWeight="Black" Foreground="#00BFFF"/>
-                    <TextBlock Text="nT" Foreground="#00BFFF99" FontSize="14" HorizontalAlignment="Right" Margin="0,-8,0,0"/>
-                    <Separator Background="#FFFFFF11" Height="1" Margin="0,8"/>
-                    <StackPanel Spacing="4">
-                        <TextBlock Text="{Binding ErrorX, StringFormat='Error: {0:F2} nT'}" 
-                                  Foreground="#FF5555" FontSize="13"/>
-                        <TextBlock Text="{Binding ErrorPerX, StringFormat='({0:F1}%)'}" 
-                                  Foreground="#FF999999" FontSize="11"/>
+                    
+                    <!-- Sensor 1 Data -->
+                    <StackPanel>
+                        <TextBlock Text="Sensor 1" FontSize="10" Foreground="#666666" Margin="0,5,0,0"/>
+                        <TextBlock Classes="value" Text="{Binding MagX, StringFormat='{}{0:F2}'}" 
+                                   FontSize="32" FontWeight="Black" Foreground="#00BFFF"/>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                             <TextBlock Text="{Binding ErrorX, StringFormat='Err: {0:F0}'}" Foreground="#FF5555" FontSize="11"/>
+                             <TextBlock Text="{Binding ErrorPerX, StringFormat='({0:F0}%)'}" Foreground="#999999" FontSize="11"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Sensor 2 Data -->
+                    <StackPanel IsVisible="{Binding IsDualSensor}">
+                        <Separator Background="#FFFFFF11" Height="1" Margin="0,5"/>
+                        <TextBlock Text="Sensor 2" FontSize="10" Foreground="#666666" Margin="0,5,0,0"/>
+                        <TextBlock Classes="value" Text="{Binding MagX2, StringFormat='{}{0:F2}'}" 
+                                   FontSize="32" FontWeight="Black" Foreground="#4A9EFF"/>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                             <TextBlock Text="{Binding ErrorX2, StringFormat='Err: {0:F0}'}" Foreground="#FF5555" FontSize="11"/>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Border>
 
             <!-- Y Axis Card -->
-            <Border Grid.Column="1" Classes="metric-card" CornerRadius="12" Padding="25,20"
+            <Border Grid.Column="1" Classes="metric-card" CornerRadius="12" Padding="20,20"
                     BorderThickness="1" BorderBrush="#4A9EFF33">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
@@ -88,21 +100,33 @@
                             <TextBlock Text="AXIS 2" FontSize="9" Foreground="#4A9EFF" FontWeight="Bold"/>
                         </Border>
                     </Grid>
-                    <TextBlock Classes="value" Text="{Binding MagY, StringFormat='{}{0:F2}'}" 
-                              FontSize="48" FontWeight="Black" Foreground="#4A9EFF"/>
-                    <TextBlock Text="nT" Foreground="#4A9EFF99" FontSize="14" HorizontalAlignment="Right" Margin="0,-8,0,0"/>
-                    <Separator Background="#FFFFFF11" Height="1" Margin="0,8"/>
-                    <StackPanel Spacing="4">
-                        <TextBlock Text="{Binding ErrorY, StringFormat='Error: {0:F2} nT'}" 
-                                  Foreground="#FF8888" FontSize="12"/>
-                        <TextBlock Text="{Binding ErrorPerY, StringFormat='({0:F1}%)'}" 
-                                  Foreground="#FF999999" FontSize="11"/>
+                    
+                    <!-- Sensor 1 Data -->
+                    <StackPanel>
+                        <TextBlock Text="Sensor 1" FontSize="10" Foreground="#666666" Margin="0,5,0,0"/>
+                        <TextBlock Classes="value" Text="{Binding MagY, StringFormat='{}{0:F2}'}" 
+                                   FontSize="32" FontWeight="Black" Foreground="#4A9EFF"/>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                             <TextBlock Text="{Binding ErrorY, StringFormat='Err: {0:F0}'}" Foreground="#FF8888" FontSize="11"/>
+                             <TextBlock Text="{Binding ErrorPerY, StringFormat='({0:F0}%)'}" Foreground="#999999" FontSize="11"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Sensor 2 Data -->
+                    <StackPanel IsVisible="{Binding IsDualSensor}">
+                        <Separator Background="#FFFFFF11" Height="1" Margin="0,5"/>
+                        <TextBlock Text="Sensor 2" FontSize="10" Foreground="#666666" Margin="0,5,0,0"/>
+                        <TextBlock Classes="value" Text="{Binding MagY2, StringFormat='{}{0:F2}'}" 
+                                   FontSize="32" FontWeight="Black" Foreground="#7B68EE"/>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                             <TextBlock Text="{Binding ErrorY2, StringFormat='Err: {0:F0}'}" Foreground="#FF8888" FontSize="11"/>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Border>
 
             <!-- Z-Axis Card -->
-            <Border Grid.Column="2" Classes="metric-card" CornerRadius="12" Padding="25,20" 
+            <Border Grid.Column="2" Classes="metric-card" CornerRadius="12" Padding="20,20" 
                     BorderThickness="1" BorderBrush="#4A9EFF33">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
@@ -117,15 +141,27 @@
                             <TextBlock Text="AXIS 3" FontSize="9" FontWeight="Bold" Foreground="#4A9EFF"/>
                         </Border>
                     </Grid>
-                    <TextBlock Classes="value" Text="{Binding MagZ, StringFormat='{}{0:F2}'}" 
-                              FontSize="48" FontWeight="Black" Foreground="#4A9EFF"/>
-                    <TextBlock Text="nT" Foreground="#4A9EFF99" FontSize="14" HorizontalAlignment="Right" Margin="0,-8,0,0"/>
-                    <Separator Background="#FFFFFF11" Height="1" Margin="0,8"/>
-                    <StackPanel Spacing="4">
-                        <TextBlock Text="{Binding ErrorZ, StringFormat='Error: {0:F2} nT'}" 
-                                  Foreground="#FF8888" FontSize="12"/>
-                        <TextBlock Text="{Binding ErrorPerZ, StringFormat='({0:F1}%)'}" 
-                                  Foreground="#FF999999" FontSize="11"/>
+                    
+                    <!-- Sensor 1 Data -->
+                    <StackPanel>
+                        <TextBlock Text="Sensor 1" FontSize="10" Foreground="#666666" Margin="0,5,0,0"/>
+                        <TextBlock Classes="value" Text="{Binding MagZ, StringFormat='{}{0:F2}'}" 
+                                   FontSize="32" FontWeight="Black" Foreground="#4A9EFF"/>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                             <TextBlock Text="{Binding ErrorZ, StringFormat='Err: {0:F0}'}" Foreground="#FF8888" FontSize="11"/>
+                             <TextBlock Text="{Binding ErrorPerZ, StringFormat='({0:F0}%)'}" Foreground="#999999" FontSize="11"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Sensor 2 Data -->
+                    <StackPanel IsVisible="{Binding IsDualSensor}">
+                        <Separator Background="#FFFFFF11" Height="1" Margin="0,5"/>
+                        <TextBlock Text="Sensor 2" FontSize="10" Foreground="#666666" Margin="0,5,0,0"/>
+                        <TextBlock Classes="value" Text="{Binding MagZ2, StringFormat='{}{0:F2}'}" 
+                                   FontSize="32" FontWeight="Black" Foreground="#7B68EE"/>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                             <TextBlock Text="{Binding ErrorZ2, StringFormat='Err: {0:F0}'}" Foreground="#FF8888" FontSize="11"/>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </Border>

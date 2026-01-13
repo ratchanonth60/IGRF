@@ -15,13 +15,13 @@ namespace IGRF.Avalonia.ViewModels
         // --- Debug Log ---
         private readonly StringBuilder _debugLogBuilder = new StringBuilder();
         private const int MAX_LOG_LENGTH = 50000; // Limit log size
-        
+
         [ObservableProperty] private string _debugLogText = "Debug console initialized...\n";
         [ObservableProperty] private bool _debugAutoScroll = true;
         [ObservableProperty] private string _lastRawPacketHex = "(No packets received)";
         [ObservableProperty] private string _customCommand = "";
         [ObservableProperty] private string _mfgConnectionStatus = "Not Connected";
-        
+
         /// <summary>
         /// Add a line to the debug log
         /// </summary>
@@ -29,21 +29,21 @@ namespace IGRF.Avalonia.ViewModels
         {
             var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
             var logLine = $"[{timestamp}] {message}\n";
-            
+
             Dispatcher.UIThread.Post(() =>
             {
                 _debugLogBuilder.Append(logLine);
-                
+
                 // Trim if too long
                 if (_debugLogBuilder.Length > MAX_LOG_LENGTH)
                 {
                     _debugLogBuilder.Remove(0, _debugLogBuilder.Length - MAX_LOG_LENGTH / 2);
                 }
-                
+
                 DebugLogText = _debugLogBuilder.ToString();
             });
         }
-        
+
         /// <summary>
         /// Update raw packet display (hex format)
         /// </summary>
@@ -60,14 +60,14 @@ namespace IGRF.Avalonia.ViewModels
             }
             LastRawPacketHex = sb.ToString().TrimEnd();
         }
-        
+
         [RelayCommand]
         private void ClearDebugLog()
         {
             _debugLogBuilder.Clear();
             DebugLogText = "Log cleared.\n";
         }
-        
+
         [RelayCommand]
         private async System.Threading.Tasks.Task SendCustomCommand()
         {
@@ -76,16 +76,16 @@ namespace IGRF.Avalonia.ViewModels
                 DebugLog("ERROR: No command entered");
                 return;
             }
-            
+
             if (_tcpManager == null || !_tcpManager.IsConnected)
             {
                 DebugLog("ERROR: Not connected to MFG sensor");
                 return;
             }
-            
+
             DebugLog($"Sending command: {CustomCommand}");
             bool success = await _tcpManager.SendCommandAsync(CustomCommand);
-            
+
             if (success)
             {
                 DebugLog("Command sent successfully");
@@ -95,7 +95,7 @@ namespace IGRF.Avalonia.ViewModels
                 DebugLog("Failed to send command");
             }
         }
-        
+
         /// <summary>
         /// Update MFG connection status for debug display
         /// </summary>
@@ -103,7 +103,7 @@ namespace IGRF.Avalonia.ViewModels
         {
             if (_tcpManager != null && _tcpManager.IsConnected)
             {
-                MfgConnectionStatus = $"Connected to {_mfgIpAddress}:{_mfgPort}";
+                MfgConnectionStatus = $"Connected to {MfgIpAddress}:{MfgPort}";
             }
             else
             {

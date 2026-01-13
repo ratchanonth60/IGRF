@@ -75,10 +75,10 @@
                     <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Opacity="0.9">
                         <Border Background="#80000000" CornerRadius="4" Padding="8,4">
                             <StackPanel>
-                                <TextBlock Text="X-Axis Error (nT)" FontSize="10" Foreground="#888888"/>
+                                <TextBlock Text="X-Axis Raw (nT)" FontSize="10" Foreground="#888888"/>
                                 <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="{Binding ErrorX, StringFormat=S1: {0:F2}}" Foreground="#00BFFF" FontWeight="Bold" FontSize="12"/>
-                                    <TextBlock Text="{Binding ErrorX2, StringFormat=S2: {0:F2}}" Foreground="#FFA500" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding MagX, StringFormat=S1: {0:F2}}" Foreground="#00BFFF" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding MagX2, StringFormat=S2: {0:F2}}" Foreground="#FFA500" FontWeight="Bold" FontSize="12"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -94,10 +94,10 @@
                     <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Opacity="0.9">
                         <Border Background="#80000000" CornerRadius="4" Padding="8,4">
                             <StackPanel>
-                                <TextBlock Text="Y-Axis Error (nT)" FontSize="10" Foreground="#888888"/>
+                                <TextBlock Text="Y-Axis Raw (nT)" FontSize="10" Foreground="#888888"/>
                                 <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="{Binding ErrorY, StringFormat=S1: {0:F2}}" Foreground="#4A9EFF" FontWeight="Bold" FontSize="12"/>
-                                    <TextBlock Text="{Binding ErrorY2, StringFormat=S2: {0:F2}}" Foreground="#FFA500" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding MagY, StringFormat=S1: {0:F2}}" Foreground="#4A9EFF" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding MagY2, StringFormat=S2: {0:F2}}" Foreground="#FFA500" FontWeight="Bold" FontSize="12"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -113,10 +113,10 @@
                     <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10" Opacity="0.9">
                         <Border Background="#80000000" CornerRadius="4" Padding="8,4">
                             <StackPanel>
-                                <TextBlock Text="Z-Axis Error (nT)" FontSize="10" Foreground="#888888"/>
+                                <TextBlock Text="Z-Axis Raw (nT)" FontSize="10" Foreground="#888888"/>
                                 <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="{Binding ErrorZ, StringFormat=S1: {0:F2}}" Foreground="#7B68EE" FontWeight="Bold" FontSize="12"/>
-                                    <TextBlock Text="{Binding ErrorZ2, StringFormat=S2: {0:F2}}" Foreground="#FFA500" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding MagZ, StringFormat=S1: {0:F2}}" Foreground="#7B68EE" FontWeight="Bold" FontSize="12"/>
+                                    <TextBlock Text="{Binding MagZ2, StringFormat=S2: {0:F2}}" Foreground="#FFA500" FontWeight="Bold" FontSize="12"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>

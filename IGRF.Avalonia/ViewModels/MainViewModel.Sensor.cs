@@ -22,7 +22,7 @@ namespace IGRF.Avalonia.ViewModels
         [ObservableProperty] private SensorTypeItem? _selectedSensorType;
         
         // --- MFG TCP Connection ---
-        [ObservableProperty] private string _mfgIpAddress = "192.168.1.100";
+        [ObservableProperty] private string _mfgIpAddress = "192.168.124.41";
         [ObservableProperty] private int _mfgPort = 12345;
         
         // Computed property: Is current sensor MFG type?
@@ -71,6 +71,7 @@ namespace IGRF.Avalonia.ViewModels
             _sensorService.SetSensorType(value.Type);
             OnPropertyChanged(nameof(IsMfgSensor));
             OnPropertyChanged(nameof(IsSerialSensor));
+            OnPropertyChanged(nameof(IsDualSensor));
             LogStatus = $"Sensor type changed to: {value.Name}";
         }
 

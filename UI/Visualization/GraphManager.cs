@@ -20,7 +20,7 @@ namespace IGRF_Interface.UI.Visualization
         /// Maximum number of data points to display (for memory management)
         /// </summary>
         public int MaxPoints { get; set; } = 500;
-        
+
         /// <summary>
         /// Line thickness for plot series
         /// </summary>
@@ -41,28 +41,32 @@ namespace IGRF_Interface.UI.Visualization
             {
                 Title = title,
                 TitleFontSize = 14,
-                PlotAreaBorderColor = OxyColors.Gray // กรอบกราฟสีเทาอ่อน ดูสะอาดตา
+                PlotAreaBorderColor = OxyColors.Gray, // กรอบกราฟสีเทาอ่อน ดูสะอาดตา
             };
 
             // Setup แกนเวลา (X Axis)
-            model.Axes.Add(new DateTimeAxis
-            {
-                Position = AxisPosition.Bottom,
-                StringFormat = "HH:mm:ss",
-                IntervalType = DateTimeIntervalType.Seconds,
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                Title = "Time"
-            });
+            model.Axes.Add(
+                new DateTimeAxis
+                {
+                    Position = AxisPosition.Bottom,
+                    StringFormat = "HH:mm:ss",
+                    IntervalType = DateTimeIntervalType.Seconds,
+                    MajorGridlineStyle = LineStyle.Solid,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    Title = "Time",
+                }
+            );
 
             // Setup แกนค่า (Y Axis) - เพิ่มเพื่อให้มี Grid ให้อ่านง่าย
-            model.Axes.Add(new LinearAxis
-            {
-                Position = AxisPosition.Left,
-                MajorGridlineStyle = LineStyle.Solid,
-                MinorGridlineStyle = LineStyle.Dot,
-                Title = "Value (nT)"
-            });
+            model.Axes.Add(
+                new LinearAxis
+                {
+                    Position = AxisPosition.Left,
+                    MajorGridlineStyle = LineStyle.Solid,
+                    MinorGridlineStyle = LineStyle.Dot,
+                    Title = "Value (nT)",
+                }
+            );
 
             // Setup Series
             _setpointSeries = new LineSeries
@@ -70,7 +74,7 @@ namespace IGRF_Interface.UI.Visualization
                 Title = "Setpoint",
                 Color = OxyColors.Black,
                 StrokeThickness = this.StrokeThickness,
-                LineStyle = LineStyle.Solid
+                LineStyle = LineStyle.Solid,
             };
 
             _measuredSeries = new LineSeries
@@ -78,7 +82,7 @@ namespace IGRF_Interface.UI.Visualization
                 Title = "Measured",
                 Color = OxyColors.Red,
                 StrokeThickness = this.StrokeThickness,
-                LineStyle = LineStyle.Solid
+                LineStyle = LineStyle.Solid,
             };
 
             model.Series.Add(_setpointSeries);
@@ -88,7 +92,8 @@ namespace IGRF_Interface.UI.Visualization
 
         public void Update(double setpoint, double measured)
         {
-            if (_plotView.Model == null) return;
+            if (_plotView.Model == null)
+                return;
 
             // ใช้ lock เพื่อป้องกันการแย่งกันใช้ข้อมูลระหว่าง UI Thread กับ Data Thread
             lock (_plotView.Model.SyncRoot)
@@ -124,3 +129,4 @@ namespace IGRF_Interface.UI.Visualization
         }
     }
 }
+

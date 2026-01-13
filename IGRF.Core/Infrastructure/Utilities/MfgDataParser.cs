@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -26,10 +28,10 @@ namespace IGRF_Interface.Infrastructure.Utilities
         public struct MagDataStruct
         {
             public int DataType;
-            
+
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
             public int[] L;
-            
+
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 14)]
             public float[] F;
         }
@@ -54,25 +56,25 @@ namespace IGRF_Interface.Infrastructure.Utilities
                 };
 
                 int offset = 0;
-                
+
                 // DataType (4 bytes)
                 data.DataType = BitConverter.ToInt32(packet, offset);
                 offset += 4;
-                
+
                 // L[3] (3 x 4 bytes = 12 bytes)
                 for (int i = 0; i < 3; i++)
                 {
                     data.L[i] = BitConverter.ToInt32(packet, offset);
                     offset += 4;
                 }
-                
+
                 // F[14] (14 x 4 bytes = 56 bytes)
                 for (int i = 0; i < 14; i++)
                 {
                     data.F[i] = BitConverter.ToSingle(packet, offset);
                     offset += 4;
                 }
-                
+
                 return data;
             }
             catch
@@ -100,7 +102,7 @@ namespace IGRF_Interface.Infrastructure.Utilities
                 // Sensor 2: f[11], f[12], f[13]
                 return new[] { data.F[11], data.F[12], data.F[13] };
             }
-            
+
             return null;
         }
 

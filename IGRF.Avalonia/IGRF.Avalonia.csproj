@@ -16,6 +16,7 @@
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.4" />
     <!-- MVVM Toolkit -->
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
     <PackageReference Include="ScottPlot.Avalonia" Version="5.1.57" />
     <PackageReference Include="System.Management" Version="10.0.1" />
   </ItemGroup>

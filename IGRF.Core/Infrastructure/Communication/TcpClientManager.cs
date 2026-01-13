@@ -1,7 +1,10 @@
+#nullable enable
+
 using System;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using IGRF_Interface.Infrastructure.Interfaces;
 
 namespace IGRF_Interface.Infrastructure.Communication
 {
@@ -9,7 +12,7 @@ namespace IGRF_Interface.Infrastructure.Communication
     /// TCP Client Manager for MFG Digital Fluxgate Magnetometer
     /// Handles connection and data reception from MFG sensors via Ethernet
     /// </summary>
-    public class TcpClientManager
+    public class TcpClientManager : ITcpClientManager
     {
         private TcpClient? _client;
         private NetworkStream? _stream;
@@ -17,13 +20,13 @@ namespace IGRF_Interface.Infrastructure.Communication
         private bool _isRunning;
 
         public bool IsConnected => _client?.Connected ?? false;
-        
+
         /// <summary>
         /// Event fired when a complete data packet is received
         /// Payload is the complete MFG data structure (60 bytes)
         /// </summary>
         public event Action<byte[]>? OnDataReceived;
-        
+
         /// <summary>
         /// Event fired when connection state changes
         /// </summary>
@@ -47,19 +50,19 @@ namespace IGRF_Interface.Infrastructure.Communication
             {
                 _ipAddress = ipAddress;
                 _port = port;
-                
+
                 _client = new TcpClient();
                 await _client.ConnectAsync(ipAddress, port);
-                
+
                 if (_client.Connected)
                 {
                     _stream = _client.GetStream();
                     _cancellation = new CancellationTokenSource();
                     _isRunning = true;
-                    
+
                     // Start receiving data in background
                     _ = Task.Run(() => ReceiveDataLoop(_cancellation.Token));
-                    
+
                     OnConnectionChanged?.Invoke(true);
                     return true;
                 }
@@ -68,7 +71,7 @@ namespace IGRF_Interface.Infrastructure.Communication
             {
                 Disconnect();
             }
-            
+
             return false;
         }
 
@@ -79,14 +82,14 @@ namespace IGRF_Interface.Infrastructure.Communication
         {
             _isRunning = false;
             _cancellation?.Cancel();
-            
+
             _stream?.Close();
             _client?.Close();
-            
+
             _stream = null;
             _client = null;
             _cancellation = null;
-            
+
             OnConnectionChanged?.Invoke(false);
         }
 
@@ -101,21 +104,21 @@ namespace IGRF_Interface.Infrastructure.Communication
         {
             const int PACKET_SIZE = 72; // sizeof(mag_data_struct) = 4 + 12 + 56
             byte[] buffer = new byte[PACKET_SIZE];
-            
+
             while (_isRunning && !token.IsCancellationRequested && _stream != null)
             {
                 try
                 {
                     int bytesRead = 0;
-                    
+
                     // Read complete packet
                     while (bytesRead < PACKET_SIZE && _stream.CanRead)
                     {
-                        int read = await _stream.ReadAsync(buffer, bytesRead, PACKET_SIZE - bytesRead, token);
+                        int read = await _stream.ReadAsync(buffer.AsMemory(bytesRead, PACKET_SIZE - bytesRead), token);
                         if (read == 0) break; // Connection closed
                         bytesRead += read;
                     }
-                    
+
                     if (bytesRead == PACKET_SIZE)
                     {
                         // Fire event with complete packet
@@ -134,14 +137,14 @@ namespace IGRF_Interface.Infrastructure.Communication
                     break;
                 }
             }
-            
+
             // Connection lost
             if (_isRunning)
             {
                 Disconnect();
             }
         }
-        
+
         /// <summary>
         /// Send a raw ASCII command to the MFG sensor
         /// Commands are in format: "TYPE ADDRESS DATA\r\n"
@@ -149,7 +152,7 @@ namespace IGRF_Interface.Infrastructure.Communication
         public async Task<bool> SendCommandAsync(string command)
         {
             if (_stream == null || !IsConnected) return false;
-            
+
             try
             {
                 // Ensure command ends with CRLF
@@ -157,11 +160,11 @@ namespace IGRF_Interface.Infrastructure.Communication
                 {
                     command += "\r\n";
                 }
-                
+
                 byte[] commandBytes = System.Text.Encoding.ASCII.GetBytes(command);
-                await _stream.WriteAsync(commandBytes, 0, commandBytes.Length);
+                await _stream.WriteAsync(commandBytes.AsMemory());
                 await _stream.FlushAsync();
-                
+
                 System.Diagnostics.Debug.WriteLine($"[MFG] Sent command: {command.TrimEnd()}");
                 return true;
             }
@@ -171,7 +174,7 @@ namespace IGRF_Interface.Infrastructure.Communication
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Set the sampling rate of the MFG sensor
         /// </summary>
@@ -182,7 +185,7 @@ namespace IGRF_Interface.Infrastructure.Communication
             {
                 throw new ArgumentOutOfRangeException(nameof(rateCode), "Rate code must be 0-3");
             }
-            
+
             // Command format: "TYPE ADDRESS DATA"
             // TYPE=0 (config command), ADDRESS=0 (sampling rate), DATA=rateCode
             string command = $"0 0 {rateCode}";

@@ -14,17 +14,17 @@ namespace IGRF.Avalonia.Common
             public const string DarkBackground = "#1e1e1e";
             public const string AxisColor = "#b0b0b0";
             public const string GridColor = "#333333";
-            
+
             // Plot Colors (Blue Monochromatic Theme)
-            public const string CyanBlue = "#00BFFF";      // X-Axis
-            public const string SkyBlue = "#4A9EFF";       // Y-Axis  
-            public const string SlateBlue = "#7B68EE";     // Z-Axis
+            public const string CyanBlue = "#00BFFF"; // X-Axis
+            public const string SkyBlue = "#4A9EFF"; // Y-Axis
+            public const string SlateBlue = "#7B68EE"; // Z-Axis
             public const string OrangeSatellite = "#FF4500";
             public const string Lime = "#00FF00";
             public const string Cyan = "#00FFFF";
-            
+
             // Sensor 2 Colors (Warm Theme for dual mode)
-            public const string Orange = "#FFA500";        // Sensor 2 lines
+            public const string Orange = "#FFA500"; // Sensor 2 lines
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace IGRF.Avalonia.Common
             public const int LongitudeMin = -180;
             public const int LongitudeMax = 180;
             public const int GridStep = 2;
-            public const int GridRows = LatitudeRange / GridStep;  // 90
-            public const int GridCols = LongitudeRange / GridStep;  // 180
+            public const int GridRows = LatitudeRange / GridStep; // 90
+            public const int GridCols = LongitudeRange / GridStep; // 180
         }
 
         /// <summary>
@@ -71,9 +71,9 @@ namespace IGRF.Avalonia.Common
         /// </summary>
         public static class Timing
         {
-            public const int UiUpdateIntervalMs = 100;     // 10 Hz
-            public const int SenderIntervalMs = 100;        // 10 Hz
-            public const int SatelliteUpdateIntervalMs = 1000;  // 1 Hz
+            public const int UiUpdateIntervalMs = 100; // 10 Hz
+            public const int SenderIntervalMs = 100; // 10 Hz
+            public const int SatelliteUpdateIntervalMs = 1000; // 1 Hz
         }
     }
 }

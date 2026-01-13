@@ -1,4 +1,5 @@
 using IGRF_Interface.Core.Models;
+using IGRF_Interface.Core.Interfaces;
 using System;
 
 namespace IGRF_Interface.Core.Services
@@ -7,7 +8,7 @@ namespace IGRF_Interface.Core.Services
     /// Service for processing raw sensor data from magnetometer
     /// Supports multiple sensor types including Generic (Serial) and MFG (TCP Socket)
     /// </summary>
-    public class SensorService
+    public class SensorService : ISensorService
     {
         private SensorConfig _config;
 
@@ -41,7 +42,7 @@ namespace IGRF_Interface.Core.Services
         public void SetSensorType(SensorType sensorType)
         {
             _config = SensorConfig.GetConfig(sensorType);
-            
+
             if (!_config.IsPreCalibrated)
             {
                 _alpha = _config.Alpha;
@@ -59,14 +60,14 @@ namespace IGRF_Interface.Core.Services
         /// <returns>Calibrated magnetic field data in nanoTesla</returns>
         public RawSensorData ProcessData(byte[] packet)
         {
-            if (packet == null || packet.Length < 7) 
+            if (packet == null || packet.Length < 7)
                 return new RawSensorData();
 
             if (_config.Type == SensorType.Generic)
             {
                 return ProcessGenericSerialData(packet);
             }
-            
+
             // For MFG sensors, use ProcessMFGData instead
             return new RawSensorData();
         }
@@ -77,7 +78,7 @@ namespace IGRF_Interface.Core.Services
         private RawSensorData ProcessGenericSerialData(byte[] packet)
         {
             // Note: Data is Big Endian (High Byte first) based on original logic {packet[1], packet[0]}
-            
+
             // X-axis (Bytes 0-1)
             short magX_raw = (short)((packet[0] << 8) | packet[1]);
             double magX_nT = ((magX_raw * _conversionFactor - _alpha) * _sigma) - ReferenceX;
@@ -127,15 +128,5 @@ namespace IGRF_Interface.Core.Services
             ReferenceY += currentY;
             ReferenceZ += currentZ;
         }
-    }
-
-    /// <summary>
-    /// Raw sensor data structure
-    /// </summary>
-    public struct RawSensorData
-    {
-        public double MagX { get; set; }
-        public double MagY { get; set; }
-        public double MagZ { get; set; }
     }
 }
